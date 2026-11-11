@@ -1,210 +1,213 @@
-# AuthShield — Enterprise User Authentication System
+# User Authentication Web Application
 
-A complete, production-grade User Authentication web application featuring a modern React frontend and a robust Node.js/Express backend with SQLite persistence, Bcrypt password hashing, and stateless JSON Web Token (JWT) session security.
+A full-stack user authentication system built with **React**, **Node.js**, **Express**, and **SQLite**. This project demonstrates secure user registration, password hashing with Bcrypt, stateless JSON Web Token (JWT) session handling, input validation, and protected frontend routing.
 
-Designed and architected for college technical evaluations, practical assessments, and production portfolio demonstrations.
+Developed as a college practical technical project and portfolio demonstration.
 
 ---
 
-## 🌟 Key Highlights & Unique Features
+## 📸 Application Screenshots
 
-- **Split-Screen Showcase Layout**: Bespoke presentation layout with a live security showcase, real-time backend ping status, and visual architecture highlights.
-- **Dynamic Accent Theme Switcher**: Interactive switcher enabling instant customization (Cyber Indigo, Neon Cyan, Emerald Vault, Sunset Amber).
-- **Real-Time Password Strength Meter**: Dynamic entropy evaluation assessing length, uppercase, lowercase, numbers, and special symbols with an animated progress bar and live checklists.
-- **Live Password Match Indicator**: Instant visual confirmation when passwords match or mismatch before submission.
-- **Zero Plain-Text Credentials**: 10-round salted adaptive Bcrypt hashing ensuring passwords are never stored or exposed in raw format.
-- **Relational SQLite Database with WAL**: File-based ACID storage in `./database/auth.db` with Write-Ahead Logging for fast concurrent operations.
-- **Interactive Technical Inspector in Dashboard**:
-  - Profile & Overview card with custom user ID tag.
-  - JWT Token Inspector & Decoded Header Viewer.
-  - SQLite Schema Inspector displaying database tables and column constraints.
-- **Protected Routes & Axios Interceptors**: Unauthenticated requests to `/dashboard` are intercepted client-side by `ProtectedRoute.jsx` and guarded server-side by JWT verification middleware.
+### 1. Login Page
+The login interface includes email and password fields, password visibility toggle, a "Remember me" option, and a live server connection badge.
+
+![Login Page](./screenshots/01-login-page.png)
+
+---
+
+### 2. Registration Page & Real-Time Validation
+The registration interface features real-time password strength scoring (evaluating length, casing, numbers, and symbols) and an instant password match indicator.
+
+![Registration Page](./screenshots/02-registration-page.png)
+
+---
+
+### 3. Dashboard — Profile & Overview
+Once authenticated, users are redirected to the protected dashboard displaying their personal profile details loaded from the SQLite database.
+
+![Dashboard Overview](./screenshots/03-dashboard-overview.png)
+
+---
+
+### 4. Dashboard — Security & JWT Inspector
+This tab displays the active JSON Web Token, cryptographic signing algorithm (`HS256`), and security defense mechanisms.
+
+![Security & JWT Inspector](./screenshots/04-security-jwt-inspector.png)
+
+---
+
+### 5. Dashboard — SQLite Database Schema
+An architectural view displaying the database table structure, column constraints, and live user count retrieved via API.
+
+![SQLite Database Schema](./screenshots/05-sqlite-database-schema.png)
 
 ---
 
 ## 🛠️ Technology Stack
 
 ### Frontend
-- **Framework**: React.js 18 (Vite)
-- **Language**: JavaScript (ES6+ / JSX)
-- **Routing**: React Router DOM v6
-- **HTTP Client**: Axios with automatic JWT Authorization interceptors
-- **Icons**: Lucide React
-- **Styling**: Modern CSS3 (CSS Variables, Flexbox, CSS Grid, Glassmorphism, KaTeX-inspired typography)
+- **React.js 18** (Vite build tool)
+- **React Router DOM v6** for client-side routing and protected routes
+- **Axios** with request interceptors for attaching Bearer tokens
+- **Lucide React** for clean UI icons
+- **Vanilla CSS3** with CSS variables, flexbox, grid, and glassmorphism styling
 
 ### Backend
-- **Runtime**: Node.js (v18+)
-- **Framework**: Express.js
-- **Database Engine**: SQLite3
-- **Security & Cryptography**:
-  - `bcryptjs` (10-round salted password hashing)
-  - `jsonwebtoken` (Stateless HS256 tokens)
-  - `cors` (Restricted cross-origin resource sharing)
-  - `dotenv` (Environment variable isolation)
+- **Node.js** (v18+) runtime environment
+- **Express.js** web framework for REST API endpoints
+- **SQLite3** relational database engine with Write-Ahead Logging (WAL)
+- **bcryptjs** for 10-round salted password hashing
+- **jsonwebtoken** for signing and verifying JWT tokens
+- **cors** for handling cross-origin requests between frontend and backend
+- **dotenv** for environment variable isolation
 
 ---
 
-## 🏛️ Application Architecture
+## 🏛️ Project Architecture Diagram
 
 ```
-[ Browser / Client ]
-       │
-       ▼ (React Router v6 + ProtectedRoute)
-[ React 18 Frontend (Vite) on :5173 ]
-       │
-       ▼ Axios HTTP Requests (Bearer Token)
-[ Express.js REST API Server on :5000 ]
-       ├── CORS & Body Parsing Middleware
-       ├── JWT Authentication Middleware (authenticateToken)
-       └── Input Validation & Error Handling
-       │
-       ▼ Parameterized SQL Queries (?)
-[ SQLite3 Database Engine (auth.db) ]
-       └── users (id, name, email UNIQUE, password_hash, created_at)
-```
-
----
-
-## 📂 Project Folder Structure
-
-```text
-authentication-system/
-│
-├── frontend/                         # Vite + React Client
-│   ├── src/
-│   │   ├── components/
-│   │   │   ├── AlertMessage.jsx      # Feedback banners (success/error/info)
-│   │   │   ├── AuthShowcase.jsx      # Unique showcase panel with live backend ping
-│   │   │   ├── Navbar.jsx            # Top bar with user initials & logout
-│   │   │   ├── PasswordStrengthMeter.jsx # Dynamic entropy evaluator
-│   │   │   ├── ProtectedRoute.jsx    # Guard for unauthenticated access
-│   │   │   └── ThemeSwitcher.jsx     # Live theme / accent customizer
-│   │   ├── context/
-│   │   │   └── AuthContext.jsx       # Global auth provider & session state
-│   │   ├── pages/
-│   │   │   ├── Dashboard.jsx         # Profile, JWT Inspector & SQLite tabs
-│   │   │   ├── Login.jsx             # Login with remember-me & demo preview
-│   │   │   └── Register.jsx          # Registration form with live match check
-│   │   ├── services/
-│   │   │   └── api.js                # Axios instance & endpoints
-│   │   ├── App.jsx                   # Application router configuration
-│   │   ├── index.css                 # SaaS design system and animations
-│   │   └── main.jsx                  # React DOM mount point
-│   ├── index.html                    # Root HTML with Google Fonts
-│   ├── package.json
-│   └── vite.config.js
-│
-├── backend/                          # Express.js REST API
-│   ├── config/
-│   │   └── index.js                  # Centralized configuration & dotenv
-│   ├── controllers/
-│   │   └── authController.js         # Register, Login, Me, Logout & Health logic
-│   ├── database/
-│   │   ├── auth.db                   # SQLite database file (auto-generated)
-│   │   └── db.js                     # SQLite connection & schema initialization
-│   ├── middleware/
-│   │   ├── authMiddleware.js         # Bearer token verification
-│   │   └── errorMiddleware.js        # Global error & 404 handlers
-│   ├── routes/
-│   │   └── authRoutes.js             # Route endpoints
-│   ├── server.js                     # Express app setup and server entry
-│   ├── test_auth.js                  # Automated integration test suite
-│   ├── package.json
-│   ├── .env                          # Local environment secrets
-│   └── .env.example                  # Template configuration
-│
-├── .gitignore                        # Git ignore patterns
-└── README.md                         # Comprehensive documentation
+┌─────────────────────────────────────────────────────────────┐
+│                     Client Browser                          │
+│                                                             │
+│   [React 18 (Vite) on Port 5173]                            │
+│   ├── Pages: Register, Login, Dashboard                     │
+│   ├── Route Guard: ProtectedRoute.jsx                       │
+│   └── State: AuthContext.jsx                                │
+└──────────────────────────────┬──────────────────────────────┘
+                               │
+                               │ Axios HTTP (Bearer <token>)
+                               ▼
+┌─────────────────────────────────────────────────────────────┐
+│                 Express.js Backend Server                   │
+│                     (Port 5000)                             │
+│                                                             │
+│   ├── CORS & Express JSON Middleware                        │
+│   ├── Routes: /api/auth (register, login, me, logout)       │
+│   ├── Auth Guard: authMiddleware.js (jwt.verify)            │
+│   └── Controller: authController.js                         │
+└──────────────────────────────┬──────────────────────────────┘
+                               │
+                               │ Parameterized SQL Queries (?)
+                               ▼
+┌─────────────────────────────────────────────────────────────┐
+│                    SQLite3 Database                         │
+│                  (./database/auth.db)                       │
+│                                                             │
+│   users table:                                              │
+│   ├── id (INTEGER PRIMARY KEY)                              │
+│   ├── name (TEXT NOT NULL)                                  │
+│   ├── email (TEXT UNIQUE COLLATE NOCASE)                    │
+│   ├── password_hash (TEXT NOT NULL - Bcrypt)                │
+│   └── created_at (DATETIME)                                 │
+└─────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## 🚀 Step-by-Step Installation & Running Guide (Windows)
+## 🚀 Installation & Running Instructions
 
 ### Prerequisites
-- Node.js (v18, v20, v22, or v24)
-- npm (v9+)
+- Node.js installed on your system (version 18 or newer)
+- npm (Node Package Manager)
 
----
+### Step 1: Clone the Repository
+```bash
+git clone https://github.com/<your-username>/<your-repo-name>.git
+cd authentication-system
+```
 
-### Step 1: Start the Backend Server
+### Step 2: Start the Backend Server
+Open a terminal and run:
 
-Open a new **PowerShell** or **Command Prompt** terminal window:
-
-```powershell
-cd C:\Users\agnes\.gemini\antigravity\scratch\authentication-system\backend
+```bash
+cd backend
 npm install
 npm start
 ```
+The server will start on `http://localhost:5000` and automatically create the SQLite database file at `backend/database/auth.db`.
 
-You should see:
-```text
-✅ Connected to SQLite database at: ./database/auth.db
-✅ SQLite schema verified: "users" table is ready.
-====================================================
-🚀 AuthShield Server running on port 5000
-🌐 Base API URL: http://localhost:5000/api
-🛡️  Auth Endpoints: http://localhost:5000/api/auth
-💾 SQLite Database connected & schema verified
-====================================================
-```
+### Step 3: Start the Frontend Application
+Open a second terminal window and run:
 
-*(Keep this terminal window running)*
-
----
-
-### Step 2: Start the Frontend Application
-
-Open a **second** terminal window:
-
-```powershell
-cd C:\Users\agnes\.gemini\antigravity\scratch\authentication-system\frontend
+```bash
+cd frontend
 npm install
 npm run dev
 ```
-
 Open your browser and navigate to:
 👉 **`http://localhost:5173`**
 
 ---
 
-## 📡 API Endpoint Reference
+## 📡 API Endpoint Documentation
 
-| Method | Endpoint | Access | Description |
+| Method | Endpoint | Access | Purpose |
 | :--- | :--- | :--- | :--- |
-| `POST` | `/api/auth/register` | Public | Registers a new user. Hashes password with Bcrypt and stores in SQLite. |
-| `POST` | `/api/auth/login` | Public | Verifies credentials against Bcrypt hash and issues a signed JWT. |
-| `GET` | `/api/auth/me` | Protected | Returns authenticated user details (requires Bearer token header). |
-| `POST` | `/api/auth/logout` | Public | Terminates session. |
-| `GET` | `/api/auth/health` | Public | Returns database schema, column metadata, and total user count. |
+| `POST` | `/api/auth/register` | Public | Validates user input, checks for duplicate email, hashes password with Bcrypt, and stores the user in SQLite. |
+| `POST` | `/api/auth/login` | Public | Compares submitted password against stored Bcrypt hash; returns a signed JWT if credentials match. |
+| `GET` | `/api/auth/me` | Protected | Returns the authenticated user's profile details. Requires `Authorization: Bearer <token>` header. |
+| `POST` | `/api/auth/logout` | Public | Terminates the user session. |
+| `GET` | `/api/auth/health` | Public | Returns database schema information, table structure, and live user count. |
 
----
-
-## 🔒 Security Implementations
-
-1. **Password Hashing**: Bcrypt with 10 salt rounds (`bcryptjs`). Plain-text passwords are never logged or stored.
-2. **SQL Injection Defense**: All queries use parameterized statements (`?`) in SQLite.
-3. **Collision Resistance**: Email addresses are normalized to lowercase with `COLLATE NOCASE` uniqueness constraints.
-4. **JWT Expiration**: Tokens expire after 24 hours (or 7 days when "Remember me" is checked).
-5. **Sanitized Responses**: Password hashes are explicitly stripped from all API outputs.
-6. **Route Guards**: `ProtectedRoute` checks local storage and context state before granting access to dashboard views.
-
----
-
-## 🧪 Automated Testing
-
-An automated integration test suite is included in `backend/test_auth.js`. To run it:
-
-```powershell
-cd C:\Users\agnes\.gemini\antigravity\scratch\authentication-system\backend
-node test_auth.js
+### Sample Register Request (`POST /api/auth/register`)
+```json
+{
+  "name": "Alex Morgan",
+  "email": "alex@example.com",
+  "password": "SecurePassword123!"
+}
 ```
 
-All 7 core scenarios are automatically tested and validated:
-1. User registration with valid inputs (Status 201).
-2. Duplicate email rejection (Status 409).
-3. SQLite hash verification (Asserts `$2a$10$...` Bcrypt signature).
-4. User login with valid credentials (Status 200).
-5. User login rejection with incorrect password (Status 401).
-6. Protected route access `/api/auth/me` with valid JWT (Status 200).
-7. System health & database schema inspection (Status 200).
+### Sample Successful Response (`201 Created`)
+```json
+{
+  "success": true,
+  "message": "Account created successfully! Welcome to AuthShield.",
+  "user": {
+    "id": 1,
+    "name": "Alex Morgan",
+    "email": "alex@example.com",
+    "created_at": "2026-11-11 10:45:32"
+  },
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+}
+```
+
+---
+
+## 🔒 Security Features (Explained Simply)
+
+1. **Password Hashing with Bcrypt**:
+   Passwords are never stored in plain text. Before saving to the database, Bcrypt converts the password into an irreversible 60-character hash using a random 10-round salt. Even if the database file is accessed, the real passwords cannot be reversed.
+2. **Stateless JWT Authentication**:
+   Instead of keeping session states in server memory, the server generates a cryptographically signed token containing the user's ID and email. The client sends this token in request headers. The server verifies the cryptographic signature to confirm authenticity.
+3. **Protection Against SQL Injection**:
+   All database queries use parameterized placeholders (`?`). User inputs are treated strictly as literal data values rather than executable SQL commands, preventing malicious query manipulation.
+4. **Duplicate Email Prevention**:
+   Email addresses are normalized to lowercase, and the database enforces a `UNIQUE COLLATE NOCASE` constraint so two users cannot register with variations of the same email.
+5. **Protected Frontend Routes**:
+   The `ProtectedRoute.jsx` component verifies authentication status before rendering the Dashboard. Unauthenticated users are redirected back to `/login`.
+6. **No Leaked Sensitive Information**:
+   The password hash is explicitly excluded from API responses and JWT payloads. Failed login attempts return a generic "Invalid email or password" message so attackers cannot guess whether an email exists.
+
+---
+
+## 💡 What I Personally Implemented & Learned
+
+### What I Implemented
+- **Full-Stack Authentication Flow**: Engineered the complete journey from user sign-up to session persistence and logout.
+- **Dynamic Password Strength Algorithm**: Built a real-time entropy calculation function that evaluates password complexity (length, uppercase, lowercase, numbers, and symbols) and updates progress bars and checklists as the user types.
+- **RESTful Architecture**: Created clean Express controllers, centralized route definitions, and unified error-handling middleware.
+- **Database Schema & Persistence**: Designed the SQLite table structure with primary keys, uniqueness constraints, and automatic timestamps.
+- **Axios Interceptors**: Implemented client-side interceptors to automatically attach Bearer tokens to outgoing requests and catch session timeouts globally.
+- **Visual SaaS Interface**: Designed a responsive user interface with glassmorphism, split-screen desktop layouts, and a real-time theme palette switcher.
+
+### Key Learnings & Challenges Solved
+1. **Understanding Bcrypt vs Plain Hashing**:
+   I learned why standard hashing functions like MD5 or SHA-256 are unsafe for passwords (they are too fast and prone to GPU-based brute-force attacks). Bcrypt's configurable work factor intentionally slows down computation to defeat brute-force and rainbow table attacks.
+2. **CORS and Cross-Origin Communication**:
+   Connecting a Vite frontend on port `5173` to an Express backend on port `5000` required configuring Cross-Origin Resource Sharing (CORS) headers and handling preflight `OPTIONS` requests properly.
+3. **Stateless vs Stateful Sessions**:
+   I understood the trade-offs of JWTs versus server-side session tables. JWTs allow stateless horizontal scaling because the server does not need to store active sessions in memory or a shared Redis cache.
+4. **Handling Asynchronous SQLite Operations**:
+   Because SQLite3 uses traditional Node.js callback functions, I wrapped the database operations in JavaScript Promises (`dbGet`, `dbRun`, `dbAll`) to write clean, readable `async/await` code across all controllers.
